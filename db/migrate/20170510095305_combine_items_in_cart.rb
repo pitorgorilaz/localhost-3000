@@ -21,7 +21,7 @@ class CombineItemsInCart < ActiveRecord::Migration[5.0]
 
   def down
     # разбиение записей с quantity>1 на несколько записей
-    LineItem.where("quantity>1").each do |line_item|
+    LineItem.where("quantity > 1").each do |line_item|
         # add individual items
         line_item.quantity.times do
             LineItem.create cart_id: line_item.cart_id,

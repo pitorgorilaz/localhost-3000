@@ -2,7 +2,10 @@ require 'test_helper'
 
 class LineItemsControllerTest < ActionDispatch::IntegrationTest
   setup do
+    @cart = carts(:one)
     @line_item = line_items(:one)
+    @product = products(:one)
+    @line_item.update(cart_id: @cart.id, product_id: @product.id)
   end
 
   test "should get index" do
@@ -17,7 +20,7 @@ class LineItemsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create line_item" do
     assert_difference('LineItem.count') do
-      post :create, product_id: products(:ruby).id
+      post line_items_url, params: { product_id: products(:ruby).id }
     end
 
     assert_redirected_to cart_path(assigns(:line_item).cart)
@@ -34,7 +37,7 @@ class LineItemsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update line_item" do
-    patch :update, id: @line_item, line_item: { product_id: @line_item.product_id }
+    patch line_item_url(@line_item), params: { line_item: { product_id: @product.id } }
     assert_redirected_to line_item_url(@line_item)
   end
 

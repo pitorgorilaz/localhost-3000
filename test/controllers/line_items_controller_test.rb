@@ -23,8 +23,20 @@ class LineItemsControllerTest < ActionDispatch::IntegrationTest
       post line_items_url, params: { product_id: products(:ruby).id }
     end
 
-    assert_redirected_to cart_path(assigns(:line_item).cart)
+    follow_redirect!
   end
+
+  test "should create line_item via ajax" do
+    assert_difference('LineItem.count') do
+      post line_items_url, params: { product_id: products(:ruby).id },
+        xhr: true
+    end
+
+    assert_response :success
+    assert_select_jquery :html, '#cart' do
+    assert_select 'tr#current_item td', /Programming Ruby 1.9/ end
+  end
+
 
   test "should show line_item" do
     get line_item_url(@line_item)
